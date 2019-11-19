@@ -1,3 +1,5 @@
+import { PlayerData, KEY_INGAME } from './GameDefine';
+
 cc.Class({
     extends: cc.Component,
 
@@ -35,21 +37,21 @@ cc.Class({
         this.accUp = false;
         this.accKick = false;
 
-        this.btn_left.on(cc.Node.EventType.TOUCH_START, function() {
-            this.node.x -= 2;
-        }, this);
-        this.btn_right.on(cc.Node.EventType.TOUCH_START, function () {
-            this.node.x += 2;
-        },this);
-        this.btn_up.on(cc.Node.EventType.TOUCH_START, function () {
-            this.setJumpAction();
-        },this);
-        this.btn_kick.on(cc.Node.EventType.TOUCH_START, function () {
-            this.actionKick();
-        },this);
+        this.speed = 150;
+        this.gravity = -12;
+        this.dir = 0 ;
         
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP, this.onKeyUp, this);
+    },
+
+    start () {
+        cc.log("PlayerControl start");
+        this.playerData = new PlayerData();
+        this.playerData.x = this.node.x;
+
+        this.websocketCtr = cc.find('Canvas/GameWorld')
+        .getComponent("WebsocketControl");
     },
 
     onKeyDown (event) {
@@ -57,10 +59,12 @@ cc.Class({
             case cc.macro.KEY.left:
                 this.actionShoeRunLeft()
                 this.accLeft = true;
+                this.dir = -1;
                 break;
             case cc.macro.KEY.right:
                 this.actionShoeRunRight();
                 this.accRight = true;
+                this.dir = 1;
                 break;
             case cc.macro.KEY.up:
                 this.accUp = true;
@@ -74,22 +78,12 @@ cc.Class({
     },
 
     onKeyUp (event) {
-        switch(event.keyCode) {
-            case cc.macro.KEY.left:
-                this.actionStand();
-                this.accLeft = false;
-                break;
-            case cc.macro.KEY.right:
-                this.actionStand();
-                this.accRight = false;
-                break;
-            case cc.macro.KEY.up:
-                this.accUp = false;
-                break;
-            case cc.macro.KEY.d:
-                this.accKick = false;
-                break;
-        }
+        this.actionStand();
+        this.accLeft = false;
+        this.accRight = false;
+        this.accUp = false;
+        this.accKick = false;
+        this.dir = 0;
     },
 
     actionShoeRunRight(){
@@ -126,18 +120,35 @@ cc.Class({
         return this.node.runAction(cc.sequence(jumpUp, jumpDown));
     },
 
+    getInfo(type) {
+        this.playerData.x = this.node.x;
+        if(this.websocketCtr != null) {
+            this.playerData.id = this.websocketCtr.playerDataMe.id;
+        }
+        
+        this.playerData.type = type;
+        return JSON.stringify(this.playerData);
+    },
+
 
     
     update: function (dt) {
         
-        if (this.accLeft) {
-            this.node.x -= 2;
-        } else if (this.accRight) {
-            this.node.x += 2;
-        } else if (this.accUp){
+        if(this.dir == 0) 
+            return;
+
+        this.speed -= this.gravity * dt;
+        this.node.x += this.speed * this.dir * dt;
+        this.playerData.x = this.node.x;
+
+        if (this.accUp){
             this.setJumpAction();
         } else if (this.accKick) {
             this.actionKick();
+        }
+
+        if(this.websocketCtr != null) {
+            this.websocketCtr.Send(this.getInfo(KEY_INGAME));
         }
     },
 });
