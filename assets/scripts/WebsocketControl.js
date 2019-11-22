@@ -62,11 +62,13 @@ cc.Class({
     cc.director.getPhysicsManager().enabled = true;
     this.scoreA = 0;
     this.scoreB = 0;
+    // console.log("aaaaaaaaaaaa", this.node);
   },
 
   start() {
     // this.websocket = new WebSocket("ws://127.0.0.1:8080");
-    this.websocket = new WebSocket("ws://192.168.19.28:8080");
+    // this.websocket = new WebSocket("ws://192.168.19.28:8080");
+    this.websocket = new WebSocket("ws://139.162.40.88:8080");
     var self = this;
     this.websocket.onopen = function(evt) {
       // cc.log(evt);
@@ -107,13 +109,23 @@ cc.Class({
         }
       }
       if (playerdata.key == KEY_TIME) {
-        console.log("---------Time--------", playerdata.time);
+        // console.log("---------Time--------", playerdata.time);
         self.updateMatchTime(playerdata.time);
       }
       if (playerdata.key == KEY_GOAL) {
         self.restPlayer();
         self.scoreDisplayA.string = playerdata.scoreA;
         self.scoreDisplayB.string = playerdata.scoreB;
+      }
+
+      if (playerdata.key == "onKeyDown") {
+        console.log("Onekey down");
+        let playerB = self.playerDataRivel.node.getComponent("PlayerB");
+        playerB.onKeyyDown(playerdata.onKeyDown);
+      }
+      if (playerdata.key == "onKeyUp") {
+        let playerB = self.playerDataRivel.node.getComponent("PlayerB");
+        playerB.onKeyyUp(playerdata.onKeyUp);
       }
       if (playerdata.key != undefined && playerdata.key == KEY_ENDGAME) {
         cc.director.pause();
@@ -137,23 +149,23 @@ cc.Class({
             playerdata[i].id != null &&
             playerdata[i].id == self.playerDataRivel.id
           ) {
-            self.playerDataRivel.node.x = playerdata[i].x;
-            self.playerDataRivel.node.y = playerdata[i].y;
+            // self.playerDataRivel.node.x = playerdata[i].x;
+            // self.playerDataRivel.node.y = playerdata[i].y;
             // self.playerDataRivel.node.angle = playerdata[i].angle;
             // console.log(self.playerDataRivel.node);
           }
 
-          if (
-            self.ballData &&
-            cc.isValid(self.ballData.node) &&
-            playerdata[i].playerId != null &&
-            playerdata[i].playerId == self.ballData.playerId
-          ) {
-            self.ballData.node.x = playerdata[i].x;
-            self.ballData.node.y = playerdata[i].y;
-            // self.ballData.node.setRotation(playerdata[i].angle);
-            // console.log(self.ballData.node.x);
-          }
+          // if (
+          //   self.ballData &&
+          //   cc.isValid(self.ballData.node) &&
+          //   playerdata[i].playerId != null &&
+          //   playerdata[i].playerId == self.ballData.playerId
+          // ) {
+          //   self.ballData.node.x = playerdata[i].x;
+          //   self.ballData.node.y = playerdata[i].y;
+          //   // self.ballData.node.setRotation(playerdata[i].angle);
+          //   // console.log(self.ballData.node.x);
+          // }
         }
       }
     };
@@ -213,9 +225,9 @@ cc.Class({
     this.matchTime.string = time;
   },
   restPlayer() {
-    this.ballData.node.getComponent('Ball').resetState();
-    this.playerDataMe.node.getComponent('PlayerA').resetState();
-    this.playerDataRivel.node.getComponent('PlayerB').resetState();
+    this.ballData.node.getComponent("Ball").resetState();
+    this.playerDataMe.node.getComponent("PlayerA").resetState();
+    this.playerDataRivel.node.getComponent("PlayerB").resetState();
   },
   sendData(data) {
     if (this.websocket != null && this.isConnected == true)
