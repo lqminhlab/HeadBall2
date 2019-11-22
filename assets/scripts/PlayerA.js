@@ -34,18 +34,21 @@ cc.Class({
   onKeyDown(event) {
     switch (event.keyCode) {
       case cc.macro.KEY.a:
+        this.sendKeyDownInfo("a");
         // var animState = this.node.getComponent(cc.Animation).getAnimationState('moveFoward');
         // if (!animState.isPlaying)
         this.node.getComponent(cc.Animation).playAdditive("moveFoward");
         this.accLeft = true;
         break;
       case cc.macro.KEY.d:
+        this.sendKeyDownInfo("d");
         // var animState = this.node.getComponent(cc.Animation).getAnimationState('moveBack');
         // if (!animState.isPlaying)
         this.node.getComponent(cc.Animation).playAdditive("moveBack");
         this.accRight = true;
         break;
       case cc.macro.KEY.w:
+        this.sendKeyDownInfo("w");
         var animState = this.node
           .getComponent(cc.Animation)
           .getAnimationState("jump");
@@ -53,6 +56,7 @@ cc.Class({
           this.node.getComponent(cc.Animation).playAdditive("jump");
         break;
       case cc.macro.KEY.space:
+        this.sendKeyDownInfo("space");
         var animState = this.node
           .getComponent(cc.Animation)
           .getAnimationState("kick");
@@ -65,14 +69,17 @@ cc.Class({
   onKeyUp(event) {
     switch (event.keyCode) {
       case cc.macro.KEY.a:
+        this.sendKeyUpInfo("a");
         this.accLeft = false;
         // this.node.getComponent(cc.Animation).playAdditive('idle');
         break;
       case cc.macro.KEY.d:
+        this.sendKeyUpInfo("d");
         this.accRight = false;
         // this.node.getComponent(cc.Animation).playAdditive('idle');
         break;
       case cc.macro.KEY.w:
+        this.sendKeyUpInfo("w");
         var animState = this.node
           .getComponent(cc.Animation)
           .getAnimationState("jump");
@@ -80,6 +87,7 @@ cc.Class({
           // this.node.getComponent(cc.Animation).playAdditive('idle');
           break;
       case cc.macro.KEY.space:
+        this.sendKeyUpInfo("space");
         var animState = this.node
           .getComponent(cc.Animation)
           .getAnimationState("kick");
@@ -103,6 +111,21 @@ cc.Class({
       .moveBy(0.19, cc.v2(0, -this.jumpHigh))
       .easing(cc.easeCubicActionIn());
     return this.node.runAction(cc.sequence(jumpUp, jumpDown));
+  },
+  sendKeyDownInfo(key) {
+    let sendData = { type: "onKeyDown", onKeyDown: key };
+    if (this.websocketCtr != null) {
+      sendData.id = this.websocketCtr.playerDataMe.id;
+    }
+    this.websocketCtr.sendData(JSON.stringify(sendData));
+  },
+
+  sendKeyUpInfo(key) {
+    let sendData = { type: "onKeyUp", onKeyUp: key };
+    if (this.websocketCtr != null) {
+      sendData.id = this.websocketCtr.playerDataMe.id;
+    }
+    this.websocketCtr.sendData(JSON.stringify(sendData));
   },
 
   getInfo(type) {
@@ -130,8 +153,8 @@ cc.Class({
     } else if (this.accRight) {
       this.node.x += 10;
     }
-    if (this.websocketCtr != null) {
-      this.websocketCtr.sendData(this.getInfo(KEY_INGAME));
-    }
+    // if (this.websocketCtr != null) {
+    //   this.websocketCtr.sendData(this.getInfo(KEY_INGAME));
+    // }
   }
 });

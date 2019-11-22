@@ -73,7 +73,7 @@ wss.on("connection", function connection(ws) {
 
   users[player.id] = player;
 
-  console.log("--------- LIST ROOM ----------", listRoom);
+  // console.log("--------- LIST ROOM ----------", listRoom);
 
   ws.send(
     JSON.stringify({
@@ -86,14 +86,14 @@ wss.on("connection", function connection(ws) {
     })
   );
 
-  console.log("____________________");
-  console.log("| client++: " + player.id + " connected");
-  console.log("| size : " + Object.keys(users).length);
-  console.log("____________________");
+  // console.log("____________________");
+  // console.log("| client++: " + player.id + " connected");
+  // console.log("| size : " + Object.keys(users).length);
+  // console.log("____________________");
 
   let roomPlayer = listRoom.find(room => room.id === player.idRoom);
 
-  console.log("----------Room Player--------------", listRoom);
+  // console.log("----------Room Player--------------", listRoom);
 
   if (roomPlayer.total == 2) {
     var playerA_Id = roomPlayer.playerA_Id;
@@ -142,38 +142,65 @@ wss.on("connection", function connection(ws) {
     countDown(users[playerA_Id].ws, users[playerB_Id].ws);
 
     var indexRoom = listRoom.indexOf(roomPlayer);
-    // listRoom[indexRoom].startTime = new Date();
+    listRoom[indexRoom].startTime = new Date();
     setTimeout(function() {
       endGame(users[playerA_Id].ws, users[playerB_Id].ws, listRoom[indexRoom]);
       listRoom.splice(indexRoom, 1);
-      console.log("----------Room Player--------------", listRoom);
-    }, 20000);
+      // console.log("----------Room Player--------------", listRoom);
+    }, 60000);
   }
 
   ws.on("message", data => {
-    console.log(data);
+    // console.log(data);
 
     let playerdata = JSON.parse(data);
     if (playerdata.type == KEY_READY) {
-      console.log(`Received message form client: => ${data}`);
+      // console.log(`Received message form client: => ${data}`);
     }
     let pack = new Array();
     if (
       playerdata.type == KEY_INGAME ||
       playerdata.type == KEY_BALL ||
-      playerdata.type == KEY_GOAL
+      playerdata.type == KEY_GOAL ||
+      playerdata.type == "onKeyDown" ||
+      playerdata.type == "onKeyUp"
     ) {
-      console.log("sent: ");
-      console.log(playerdata);
+      // console.log("sent: ");
+      // console.log(playerdata);
+
       var userInRoom = [
         users[roomPlayer.playerA_Id],
         users[roomPlayer.playerB_Id]
       ];
+      if (playerdata.type == "onKeyDown") {
+        for (var id = 0; id < userInRoom.length; id++) {
+          if (userInRoom[id].id != playerdata.id) {
+            userInRoom[id].ws.send(
+              JSON.stringify({
+                key: "onKeyDown",
+                onKeyDown: playerdata.onKeyDown
+              })
+            );
+          }
+        }
+      }
+      if (playerdata.type == "onKeyUp") {
+        for (var id = 0; id < userInRoom.length; id++) {
+          if (userInRoom[id].id != playerdata.id) {
+            userInRoom[id].ws.send(
+              JSON.stringify({
+                key: "onKeyUp",
+                onKeyUp: playerdata.onKeyUp
+              })
+            );
+          }
+        }
+      }
       if (playerdata.type == KEY_GOAL) {
         var indexRoom = listRoom.indexOf(roomPlayer);
         listRoom[indexRoom].scoreA = playerdata.scoreA;
         listRoom[indexRoom].scoreB = playerdata.scoreB;
-        console.log(listRoom[indexRoom]);
+        // console.log(listRoom[indexRoom]);
         for (let id in userInRoom) {
           userInRoom[id].ws.send(
             JSON.stringify({
@@ -212,23 +239,23 @@ wss.on("connection", function connection(ws) {
   });
 
   ws.on("close", message => {
-    console.log("close .. ");
-    console.log(message);
-    console.log(wss.clients.length);
+    // console.log("close .. ");
+    // console.log(message);
+    // console.log(wss.clients.length);
 
     for (let obj in users) {
-      console.log(obj);
+      // console.log(obj);
       if (users[obj].ws == ws) {
-        console.log("remove client --");
+        // console.log("remove client --");
         delete users[obj];
         break;
       }
     }
-    console.log("clients size : " + Object.keys(users).length);
+    // console.log("clients size : " + Object.keys(users).length);
   });
 
   ws.on("error", function(code, reason) {
-    console.log(code);
+    // console.log(code);
   });
 });
 
@@ -250,16 +277,14 @@ endGame = (wsA, wsB, room) => {
     })
   );
   //---------- Ket Qua --------
-  console.log('+------ KET QUA -----+');
-  console.log(`| A - ${room.id} : ${room.scoreA} `);
-  console.log(`| B - ${room.id}: ${room.scoreB}`);
-  console.log('+--------------------+');
-
-  
+  // console.log("+------ KET QUA -----+");
+  // console.log(`| A - ${room.id} : ${room.scoreA} `);
+  // console.log(`| B - ${room.id}: ${room.scoreB}`);
+  // console.log("+--------------------+");
 };
 
 countDown = (wsA, wsB) => {
-  var time = 20;
+  var time = 60;
   var downloadTimer = setInterval(function() {
     time -= 1;
     wsA.send(

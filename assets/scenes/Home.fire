@@ -195,7 +195,7 @@
       "array": [
         0,
         0,
-        426.0845031738281,
+        525.6774291992188,
         0,
         0,
         0,
@@ -809,7 +809,7 @@
     },
     "component": "",
     "_componentId": "712c3+m5jpDcJZTp1dcMr1H",
-    "handler": "playTx",
+    "handler": "startGame",
     "customEventData": ""
   },
   {
