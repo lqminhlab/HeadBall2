@@ -27,13 +27,16 @@ cc.Class({
   getOriginPosX() {
     return this.originPosX;
   },
+  getOriginPosY() {
+    return this.originPosY;
+  },
 
   start() {
     cc.log("PlayerControl start");
     this.playerData = new PlayerData();
     this.playerData.x = this.node.x;
     this.websocketCtr = cc
-      .find("Canvas")
+      .find("Canvas/GameWorld")
       .getComponent("WebsocketControl");
   },
 
@@ -147,5 +150,11 @@ cc.Class({
     if (this.websocketCtr != null) {
       this.websocketCtr.sendData(this.getInfo(KEY_INGAME));
     }
+  },
+  onCollisionEnter(other, self) {
+    console.log("Currently colliding");
+  },
+  onCollisionExit(other, self) {
+    console.log("Done colliding");
   }
 });

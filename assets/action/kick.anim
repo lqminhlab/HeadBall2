@@ -5,7 +5,7 @@
   "_native": "",
   "_duration": 0.75,
   "sample": 60,
-  "speed": 3,
+  "speed": 2,
   "wrapMode": 0,
   "curveData": {
     "props": {
@@ -31,16 +31,20 @@
           "value": 10
         },
         {
-          "frame": 0.5,
-          "value": 20
+          "frame": 0.4,
+          "value": 33.84
         },
         {
-          "frame": 0.5833333333333334,
+          "frame": 0.48333333333333334,
           "value": 30
         },
         {
-          "frame": 0.6666666666666666,
-          "value": 40
+          "frame": 0.5666666666666667,
+          "value": 37.448599999999985
+        },
+        {
+          "frame": 0.65,
+          "value": 79.07212000000001
         },
         {
           "frame": 0.75,

@@ -1,19 +1,29 @@
-# HeadBall
+# Head Soccer
 
 ## Introduction
 
-This is a Head Ball style game - run on Ethereum - built by Cocos Creator.
+This is a Head Soccer style game - run on Ethereum - built by Cocos Creator.
 
-Live Game: [PLAY](https://etherbird.surge.sh)
+Live Game: [PLAY](http://headsoccer2.surge.sh/)
 
 (Make sure you are using Rinkeby and have some Ether in your account)
 
 ## How to play
 
+![home](documentation/home.png)
+
 - You must bet `0.1 ETH` for each play turn.
+  ![play](documentation/play.png)
+
 - If you win, you will receive `0.2 ETH`
+  ![win](documentation/win.png)
+
 - If you lose, you will lose your bet.
+  ![lose](documentation/lose.png)
+
 - If draw, you will receive your bet back.
+  ![draw1](documentation/draw1.png)
+  ![draw2](documentation/draw2.png)
 
 ## How it works
 

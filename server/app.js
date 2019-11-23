@@ -21,7 +21,7 @@ class Room {
     this.scoreA = 0;
     this.scoreB = 0;
     this.total = 0;
-    this.time = 0;
+    this.time = 60;
   }
 }
 const KEY_CONNECTED = "connected";
@@ -44,7 +44,6 @@ wss.on("connection", function connection(ws, req) {
   } else {
     player = new PlayerData(uuidv1(), 0);
   }
-  console.log(player);
 
   player.ws = ws;
   player.key = KEY_CONNECTED;
@@ -152,10 +151,16 @@ wss.on("connection", function connection(ws, req) {
     var indexRoom = listRoom.indexOf(roomPlayer);
     // listRoom[indexRoom].startTime = new Date();
     setTimeout(function() {
-      endGame(users[playerA_Id].ws, users[playerB_Id].ws, listRoom[indexRoom]);
+      if (users[playerA_Id] && users[playerB_Id]) {
+        endGame(
+          users[playerA_Id].ws,
+          users[playerB_Id].ws,
+          listRoom[indexRoom]
+        );
+      }
       listRoom.splice(indexRoom, 1);
       // console.log("----------Room Player--------------", listRoom);
-    }, 20000);
+    }, 60000);
   }
 
   ws.on("message", data => {
@@ -224,23 +229,39 @@ wss.on("connection", function connection(ws, req) {
     // console.log(message);
     // console.log(wss.clients.length);
 
-    for (let obj in users) {
-      // console.log(obj);
-      if (users[obj].ws == ws) {
-        // console.log("remove client --");
-        delete users[obj];
-        break;
-      }
-    }
-
     var indexRoom = listRoom.indexOf(roomPlayer);
     if (listRoom[indexRoom]) {
+      if (listRoom[indexRoom].time > 0 && listRoom[indexRoom].total == 2) {
+        if (player.id == listRoom[indexRoom].playerA_Id) {
+          listRoom[indexRoom].scoreA = 0;
+          listRoom[indexRoom].scoreB = 3;
+        }
+        if (player.id == listRoom[indexRoom].playerB_Id) {
+          listRoom[indexRoom].scoreB = 0;
+          listRoom[indexRoom].scoreA = 3;
+        }
+        endGame(
+          users[listRoom[indexRoom].playerA_Id].ws,
+          users[listRoom[indexRoom].playerB_Id].ws,
+          listRoom[indexRoom]
+        );
+      }
+
+      for (let obj in users) {
+        // console.log(obj);
+        if (users[obj].ws == ws) {
+          // console.log("remove client --");
+          delete users[obj];
+          break;
+        }
+      }
+
       listRoom[indexRoom].total -= 1;
       if (listRoom[indexRoom].total == 0) {
         listRoom.splice(indexRoom, 1);
       }
     }
-    console.log("----------- Room -----------", listRoom);
+    // console.log("----------- Room -----------", listRoom);
 
     // console.log("clients size : " + Object.keys(users).length);
   });
@@ -259,7 +280,6 @@ endGame = (wsA, wsB, room) => {
       node: null,
       addressA: room.playerA_Id,
       addressB: room.playerB_Id
-
     })
   );
   wsB.send(
@@ -270,7 +290,6 @@ endGame = (wsA, wsB, room) => {
       node: null,
       addressA: room.playerA_Id,
       addressB: room.playerB_Id
-
     })
   );
   //---------- Ket Qua --------
@@ -281,24 +300,34 @@ endGame = (wsA, wsB, room) => {
 };
 
 countDown = (wsA, wsB, roomId) => {
-  var time = 20;
+  var time = 60;
   var downloadTimer = setInterval(function() {
     time -= 1;
-    wsA.send(
-      JSON.stringify({
-        key: KEY_TIME,
-        time: time
-      })
-    );
-    wsB.send(
-      JSON.stringify({
-        key: KEY_TIME,
-        time: time
-      })
-    );
+    if (wsA) {
+      wsA.send(
+        JSON.stringify({
+          key: KEY_TIME,
+          time: time
+        })
+      );
+    }
+
+    if (wsB) {
+      wsB.send(
+        JSON.stringify({
+          key: KEY_TIME,
+          time: time
+        })
+      );
+    }
+
     if (time <= 0) {
       clearInterval(downloadTimer);
     }
     let roomPlayer = listRoom.find(room => room.id === roomId);
+    var indexRoom = listRoom.indexOf(roomPlayer);
+    if (listRoom[indexRoom]) {
+      listRoom[indexRoom].time = time;
+    }
   }, 1000);
 };

@@ -62,19 +62,18 @@ const WebsocketControl = cc.Class({
   // LIFE-CYCLE CALLBACKS:
 
   onLoad() {
-   cc.director.getPhysicsManager().enabled = true;
+    cc.director.getPhysicsManager().enabled = true;
     this.scoreA = 0;
     this.scoreB = 0;
     WebsocketControl.instance = this;
-
-    
   },
   start() {
-
-    this.websocket = new WebSocket(`ws://192.168.19.16:8081/?address=${this.address}`);
     // this.websocket = new WebSocket(
-    //   `ws://139.162.40.88:8081/?address=${this.address}`
+    //   `ws://127.0.0.1:8081/?address=${this.address}`
     // );
+    this.websocket = new WebSocket(
+      `ws://139.162.40.88:8081/?address=${this.address}`
+    );
     var self = this;
     this.websocket.onopen = function(evt) {
       // cc.log(evt);
@@ -89,7 +88,7 @@ const WebsocketControl = cc.Class({
           self.playerDataMe = playerdata;
           self.playerDataMe.node = cc.instantiate(self.prefab_Me);
           if (self.playerDataMe.index == 2) {
-            self.playerDataMe.node.x = 150;
+            self.playerDataMe.node.x = 330;
             self.playerDataMe.node.scaleX *= -1;
           }
           console.log("Me: ", self.playerDataMe);
@@ -102,7 +101,7 @@ const WebsocketControl = cc.Class({
           self.playerDataRivel = playerdata;
           self.playerDataRivel.node = cc.instantiate(self.prefab_Player);
           if (self.playerDataRivel.index == 2) {
-            self.playerDataRivel.node.x = 150;
+            self.playerDataRivel.node.x = 330;
             self.playerDataRivel.node.scaleX *= -1;
           }
           self.node.addChild(self.playerDataRivel.node);
@@ -117,7 +116,7 @@ const WebsocketControl = cc.Class({
         }
       }
       if (playerdata.key == KEY_TIME) {
-        console.log("---------Time--------", playerdata.time);
+        // console.log("---------Time--------", playerdata.time);
         self.updateMatchTime(playerdata.time);
       }
       if (playerdata.key == KEY_GOAL) {
@@ -126,7 +125,7 @@ const WebsocketControl = cc.Class({
         self.scoreDisplayB.string = playerdata.scoreB;
       }
       if (playerdata.key != undefined && playerdata.key == KEY_ENDGAME) {
-       cc.director.pause();
+        cc.director.pause();
 
         self.resultBoard = playerdata;
         self.resultBoard.node = cc.instantiate(self.prefab_ResultBoard);
@@ -134,32 +133,29 @@ const WebsocketControl = cc.Class({
         self.resultBoard.node
           .getComponent("ResultBoard")
           .updateScore(playerdata.scoreA, playerdata.scoreB);
-        if(playerdata.scoreA != playerdata.scoreB){
-          console.log('data' ,playerdata);
-          console.log('data' ,self.address);
+        if (playerdata.scoreA != playerdata.scoreB) {
+          console.log("data", playerdata);
+          console.log("data", self.address);
 
-
-          if(playerdata.scoreA > playerdata.scoreB && playerdata.addressA == self.address){
-            console.log('address',self.address);
-            self.resultBoard.node
-            .getComponent("ResultBoard")
-            .updateResult(1);
-           Web3Controller.instance.endGameTx(1);
-          }else if(playerdata.scoreB > playerdata.scoreA && playerdata.addressB == self.address){
+          if (
+            playerdata.scoreA > playerdata.scoreB &&
+            playerdata.addressA == self.address
+          ) {
+            console.log("address", self.address);
+            self.resultBoard.node.getComponent("ResultBoard").updateResult(1);
             Web3Controller.instance.endGameTx(1);
-            self.resultBoard.node
-            .getComponent("ResultBoard")
-            .updateResult(1);
-          }else{
-            self.resultBoard.node
-            .getComponent("ResultBoard")
-            .updateResult(3);
+          } else if (
+            playerdata.scoreB > playerdata.scoreA &&
+            playerdata.addressB == self.address
+          ) {
+            Web3Controller.instance.endGameTx(1);
+            self.resultBoard.node.getComponent("ResultBoard").updateResult(1);
+          } else {
+            self.resultBoard.node.getComponent("ResultBoard").updateResult(3);
           }
-        }else{
+        } else {
           Web3Controller.instance.getComponent("Web3Controller").endGameTx(0);
-          self.resultBoard.node
-          .getComponent("ResultBoard")
-          .updateResult(2);
+          self.resultBoard.node.getComponent("ResultBoard").updateResult(2);
         }
         var goHome = cc.find("Canvas/goHome");
         goHome.active = false;
@@ -252,11 +248,43 @@ const WebsocketControl = cc.Class({
     this.matchTime.string = time;
   },
   restPlayer() {
-   cc.director.pause();
-    this.ballData.node.getComponent("Ball").resetState();
-    this.playerDataMe.node.getComponent("PlayerA").resetState();
-    this.playerDataRivel.node.getComponent("PlayerB").resetState();
-   cc.director.resume();
+    // this.ballData.node.getComponent("Ball").resetState();
+    // this.playerDataMe.node.setPosition(
+    //   this.playerDataMe.node.getComponent("PlayerA").getOriginPosX(),
+    //   this.playerDataMe.node.getComponent("PlayerA").getOriginPosY()
+    // );
+    // setTimeout(() => {
+    //   cc.director.getPhysicsManager().enabled = true;
+    // }, 1000);
+    this.ballData.node.destroy();
+    this.playerDataMe.node.destroy();
+    this.playerDataRivel.node.destroy();
+
+    this.playerDataMe.node = cc.instantiate(this.prefab_Me);
+    if (this.playerDataMe.index == 2) {
+      this.playerDataMe.node.x = 330;
+      this.playerDataMe.node.scaleX *= -1;
+    }
+    this.node.addChild(this.playerDataMe.node);
+    this.playerDataRivel.node = cc.instantiate(this.prefab_Player);
+    if (this.playerDataRivel.index == 2) {
+      this.playerDataRivel.node.x = 330;
+      this.playerDataRivel.node.scaleX *= -1;
+    }
+    this.node.addChild(this.playerDataRivel.node);
+    this.ballData.node = cc.instantiate(this.prefab_Ball);
+    this.node.addChild(this.ballData.node);
+    // cc.director.getPhysicsManager().enabled = true;
+
+    // this.ballData.node.x = this.ballData.node.getComponent("Ball").originPosX;
+    // this.ballData.node.y = this.ballData.node.getComponent("Ball").originPosY;
+    // this.ballData.node.getComponent(cc.RigidBody).linearVelocity = cc.v2(0, 0);
+    // this.ballData.node.getComponent(cc.RigidBody).linearDamping = 0;
+    // this.ballData.node.getComponent(cc.RigidBody).angularDamping = 0;
+    // this.ballData.node.getComponent(cc.RigidBody).angularVelocity = 0;
+    // this.ballData.node.getComponent("Ball").resetState();
+
+    // this.playerDataRivel.node.getComponent("PlayerB").resetState();
   },
   sendData(data) {
     if (this.websocket != null && this.isConnected == true)
