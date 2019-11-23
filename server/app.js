@@ -155,7 +155,7 @@ wss.on("connection", function connection(ws, req) {
       endGame(users[playerA_Id].ws, users[playerB_Id].ws, listRoom[indexRoom]);
       listRoom.splice(indexRoom, 1);
       // console.log("----------Room Player--------------", listRoom);
-    }, 20000);
+    }, 40000);
   }
 
   ws.on("message", data => {
@@ -259,7 +259,6 @@ endGame = (wsA, wsB, room) => {
       node: null,
       addressA: room.playerA_Id,
       addressB: room.playerB_Id
-
     })
   );
   wsB.send(
@@ -270,7 +269,6 @@ endGame = (wsA, wsB, room) => {
       node: null,
       addressA: room.playerA_Id,
       addressB: room.playerB_Id
-
     })
   );
   //---------- Ket Qua --------
@@ -281,7 +279,7 @@ endGame = (wsA, wsB, room) => {
 };
 
 countDown = (wsA, wsB, roomId) => {
-  var time = 20;
+  var time = 40;
   var downloadTimer = setInterval(function() {
     time -= 1;
     wsA.send(

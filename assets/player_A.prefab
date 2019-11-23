@@ -64,8 +64,8 @@
       "__type__": "TypedArray",
       "ctor": "Float32Array",
       "array": [
-        -173,
-        -113.39600372314453,
+        -367.88299560546875,
+        -90.73300170898438,
         0,
         0,
         0,
@@ -207,9 +207,9 @@
       "__id__": 1
     },
     "asset": {
-      "__uuid__": "ebe57246-a23f-4261-8703-e1275dfb7e32"
+      "__uuid__": "0e5a68bf-5614-4e5a-89ae-3a6823a7161c"
     },
-    "fileId": "4aF4HgAmZP5o1HmAkfvV4B",
+    "fileId": "f4TjcR1OdKI4OljwlYn9Fg",
     "sync": false
   },
   {
@@ -314,9 +314,9 @@
       "__id__": 1
     },
     "asset": {
-      "__uuid__": "ebe57246-a23f-4261-8703-e1275dfb7e32"
+      "__uuid__": "0e5a68bf-5614-4e5a-89ae-3a6823a7161c"
     },
-    "fileId": "f9IRomCPhLu6YQkXvtvZtn",
+    "fileId": "f7/Vqgvt9OMqiz4ehwEbWz",
     "sync": false
   },
   {
@@ -329,7 +329,7 @@
     "_enabled": true,
     "_type": 3,
     "_allowSleep": true,
-    "_gravityScale": 0,
+    "_gravityScale": 50,
     "_linearDamping": 0,
     "_angularDamping": 0,
     "_linearVelocity": {
@@ -518,9 +518,9 @@
       "__id__": 1
     },
     "asset": {
-      "__uuid__": "ebe57246-a23f-4261-8703-e1275dfb7e32"
+      "__uuid__": "0e5a68bf-5614-4e5a-89ae-3a6823a7161c"
     },
-    "fileId": "9aCKdJYo1E5IvYWk2bXNba",
+    "fileId": "bcorbEIbFAwrFQVRP6rT0t",
     "sync": false
   }
 ]
