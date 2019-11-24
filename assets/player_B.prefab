@@ -13,7 +13,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "player_B",
+    "_name": "player_A",
     "_objFlags": 0,
     "_parent": null,
     "_children": [
@@ -64,8 +64,8 @@
       "__type__": "TypedArray",
       "ctor": "Float32Array",
       "array": [
-        -173,
-        -113.39600372314453,
+        -367.88299560546875,
+        -90.73300170898438,
         0,
         0,
         0,
@@ -207,9 +207,9 @@
       "__id__": 1
     },
     "asset": {
-      "__uuid__": "92099f0a-b2eb-41b1-9707-959d456c0ba2"
+      "__uuid__": "ed29d033-6017-428e-8c24-2ea5b207a236"
     },
-    "fileId": "aeu7dNe4ZFHYez8AkOq446",
+    "fileId": "f4TjcR1OdKI4OljwlYn9Fg",
     "sync": false
   },
   {
@@ -314,9 +314,9 @@
       "__id__": 1
     },
     "asset": {
-      "__uuid__": "92099f0a-b2eb-41b1-9707-959d456c0ba2"
+      "__uuid__": "ed29d033-6017-428e-8c24-2ea5b207a236"
     },
-    "fileId": "b7pyP4R7tC7ZSSSdtGvBEL",
+    "fileId": "f7/Vqgvt9OMqiz4ehwEbWz",
     "sync": false
   },
   {
@@ -329,7 +329,7 @@
     "_enabled": true,
     "_type": 3,
     "_allowSleep": true,
-    "_gravityScale": 0,
+    "_gravityScale": 50,
     "_linearDamping": 0,
     "_angularDamping": 0,
     "_linearVelocity": {
@@ -514,9 +514,9 @@
       "__id__": 1
     },
     "asset": {
-      "__uuid__": "92099f0a-b2eb-41b1-9707-959d456c0ba2"
+      "__uuid__": "ed29d033-6017-428e-8c24-2ea5b207a236"
     },
-    "fileId": "c5RWH9ogVGkL5tWtmdoh1W",
+    "fileId": "bcorbEIbFAwrFQVRP6rT0t",
     "sync": false
   }
 ]

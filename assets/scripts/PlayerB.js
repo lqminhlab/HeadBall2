@@ -7,6 +7,12 @@ cc.Class({
     this.originPosX = this.node.x;
     this.originPosY = this.node.y;
   },
+  getOriginPosX() {
+    return this.originPosX;
+  },
+  getOriginPosY() {
+    return this.originPosY;
+  },
 
   resetState() {
     this.node.x = this.originPosX;
@@ -37,8 +43,6 @@ cc.Class({
         var animState = this.node
           .getComponent(cc.Animation)
           .getAnimationState("kick");
-        console.log(animState);
-
         if (!animState.isPlaying)
           this.node.getComponent(cc.Animation).playAdditive("kick");
         break;
@@ -55,8 +59,6 @@ cc.Class({
         this.node.getComponent(cc.Animation).playAdditive("idle");
         break;
       case "w":
-        console.log();
-
         var animState = this.node
           .getComponent(cc.Animation)
           .getAnimationState("jump");
